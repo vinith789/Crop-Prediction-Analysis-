@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Crop Prediction</h1>
+        <form action="/prediction" method="post">
+            <label for="temp">Temperature (°C):</label>
+            <input type="text" name="temp" id="temp" placeholder="Enter temperature" required>
+
+            <label for="humd">Humidity (%):</label>
+            <input type="text" name="humd" id="humd" placeholder="Enter humidity" required>
+
+            <label for="ph">pH Level:</label>
+            <input type="text" name="ph" id="ph" placeholder="Enter pH level" required>
+
+            <label for="rain">Rainfall (mm):</label>
+            <input type="text" name="rain" id="rain" placeholder="Enter rainfall" required>
+
+            <button type="submit">Predict Crop</button>
+        </form>
+    </div>
+</body>
+</html>
+

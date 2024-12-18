@@ -1,54 +1,40 @@
-from flask import Flask, render_template,request
-
+from flask import Flask, render_template, request
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
-@app.route('/crop_prediction')
-def crop_prediction():
-    return render_template('prediction.html')
-
-
-@app.route('/prediction',methods=["POST","GET"])
+@app.route('/prediction', methods=["POST"])
 def prediction():
+    try:
+        # Get input values from the form
+        temp = float(request.form.get("temp"))
+        humd = float(request.form.get("humd"))
+        ph = float(request.form.get("ph"))
+        rain = float(request.form.get("rain"))
 
-    temp = request.form.get("temp")
+        # Load the dataset
+        df = pd.read_csv("crop_dataset.csv")
 
-    humd = request.form.get("humd")
+        # Prepare the data
+        y_train = df["label"]
+        x_train = df.drop(columns=["label"])
 
-    ph = request.form.get("ph")
+        # Train the KNeighborsClassifier model
+        clf_knn = KNeighborsClassifier(n_neighbors=3)
+        clf_knn.fit(x_train, y_train)
 
-    rain = request.form.get("rain")
+        # Predict the crop
+        x_test = [[temp, humd, ph, rain]]
+        pre_res = clf_knn.predict(x_test)
 
-    df = pd.read_csv("crop_dataset.csv")
-
-    y_train = df["label"]
-    del df["label"]
-
-    x_train = df
-
-    clf_knn = KNeighborsClassifier(n_neighbors=3)
-
-    # Training the ML model
-    clf_knn.fit(x_train, y_train)
-
-    x_test = [[float(temp),float(humd), float(ph),float(rain)]]
-
-    pre_res = clf_knn.predict(x_test)
-
-    return  "Crop Prediction Results="+pre_res[0]
-
-
-
-
-
+        return render_template('result.html', prediction=pre_res[0])
+    except Exception as e:
+        return f"Error occurred: {str(e)}"
 
 if __name__ == '__main__':
     app.run(host="localhost", port=1166, debug=True)

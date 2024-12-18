@@ -90,9 +90,5 @@ def prediction():
     return  "Crop Prediction Results="+LR_pred[0]
 
 
-
-
-
-
 if __name__ == '__main__':
     app.run(host="localhost", port=1166, debug=True)
